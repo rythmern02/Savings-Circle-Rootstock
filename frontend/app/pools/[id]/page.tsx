@@ -1,0 +1,286 @@
+"use client"
+
+import { useState } from "react"
+import { useParams } from "next/navigation"
+import { Navbar } from "@/components/navbar"
+import { Background3D } from "@/components/3d-background"
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Users, TrendingUp, Calendar, Target, ArrowRight, Send } from "lucide-react"
+
+export default function PoolDetailPage() {
+  const params = useParams()
+  const poolId = params.id as string
+  const [bidAmount, setBidAmount] = useState("")
+  const [submitAmount, setSubmitAmount] = useState("")
+
+  // Mock pool data
+  const pool = {
+    id: poolId,
+    name: "Summer Vacation Fund",
+    description: "Group savings for an amazing summer trip to Europe",
+    members: 8,
+    maxMembers: 10,
+    totalAmount: 8500,
+    targetAmount: 10000,
+    duration: "6 months",
+    status: "active" as const,
+    startDate: "Jan 15, 2024",
+    endDate: "Jul 15, 2024",
+    rules: [
+      "Minimum contribution: $100",
+      "Maximum contribution: $2000",
+      "Bidding rounds every 2 weeks",
+      "Withdrawals allowed after 30 days",
+    ],
+    members_list: [
+      { id: "1", name: "You", contribution: 1200, status: "active" },
+      { id: "2", name: "Alice Johnson", contribution: 1500, status: "active" },
+      { id: "3", name: "Bob Smith", contribution: 1000, status: "active" },
+      { id: "4", name: "Carol White", contribution: 1200, status: "active" },
+      { id: "5", name: "David Brown", contribution: 900, status: "active" },
+      { id: "6", name: "Emma Davis", contribution: 1100, status: "active" },
+      { id: "7", name: "Frank Miller", contribution: 800, status: "active" },
+      { id: "8", name: "Grace Lee", contribution: 800, status: "active" },
+    ],
+  }
+
+  const progress = (pool.totalAmount / pool.targetAmount) * 100
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Background3D />
+      <Navbar />
+
+      <main className="pt-20 pb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="mb-8 animate-slide-up">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">{pool.name}</h1>
+                <p className="text-lg text-muted-foreground">{pool.description}</p>
+              </div>
+              <div
+                className={`px-4 py-2 rounded-lg text-sm font-semibold ${
+                  pool.status === "active" ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {pool.status.charAt(0).toUpperCase() + pool.status.slice(1)}
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            {/* Left Column - Pool Info */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Progress Card */}
+              <Card className="group relative overflow-hidden border-border/50 bg-card/50 backdrop-blur p-6 animate-slide-up">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold text-foreground">Pool Progress</h3>
+                    <span className="text-2xl font-bold text-primary">{Math.round(progress)}%</span>
+                  </div>
+                  <div className="w-full h-3 bg-muted rounded-full overflow-hidden mb-4">
+                    <div
+                      className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">Current</p>
+                      <p className="text-xl font-bold text-foreground">${pool.totalAmount.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">Target</p>
+                      <p className="text-xl font-bold text-foreground">${pool.targetAmount.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">Remaining</p>
+                      <p className="text-xl font-bold text-accent">
+                        ${(pool.targetAmount - pool.totalAmount).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-2 gap-4">
+                <Card
+                  className="group relative overflow-hidden border-border/50 bg-card/50 backdrop-blur p-6 animate-slide-up"
+                  style={{ animationDelay: "100ms" }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-2 rounded-lg bg-primary/20">
+                        <Users className="w-5 h-5 text-primary" />
+                      </div>
+                      <span className="text-sm text-muted-foreground">Members</span>
+                    </div>
+                    <p className="text-2xl font-bold text-foreground">
+                      {pool.members}/{pool.maxMembers}
+                    </p>
+                  </div>
+                </Card>
+
+                <Card
+                  className="group relative overflow-hidden border-border/50 bg-card/50 backdrop-blur p-6 animate-slide-up"
+                  style={{ animationDelay: "150ms" }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-2 rounded-lg bg-accent/20">
+                        <Calendar className="w-5 h-5 text-accent" />
+                      </div>
+                      <span className="text-sm text-muted-foreground">Duration</span>
+                    </div>
+                    <p className="text-2xl font-bold text-foreground">{pool.duration}</p>
+                  </div>
+                </Card>
+              </div>
+
+              {/* Rules */}
+              <Card
+                className="group relative overflow-hidden border-border/50 bg-card/50 backdrop-blur p-6 animate-slide-up"
+                style={{ animationDelay: "200ms" }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative">
+                  <h3 className="text-lg font-bold text-foreground mb-4">Pool Rules</h3>
+                  <ul className="space-y-3">
+                    {pool.rules.map((rule, index) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+                        <span className="text-sm text-muted-foreground">{rule}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Card>
+
+              {/* Members */}
+              <Card
+                className="group relative overflow-hidden border-border/50 bg-card/50 backdrop-blur p-6 animate-slide-up"
+                style={{ animationDelay: "250ms" }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative">
+                  <h3 className="text-lg font-bold text-foreground mb-4">Pool Members</h3>
+                  <div className="space-y-3">
+                    {pool.members_list.map((member) => (
+                      <div
+                        key={member.id}
+                        className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
+                      >
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{member.name}</p>
+                          <p className="text-xs text-muted-foreground">{member.status}</p>
+                        </div>
+                        <p className="text-sm font-bold text-primary">${member.contribution.toLocaleString()}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* Right Column - Actions */}
+            <div className="space-y-6">
+              {/* Bid Section */}
+              <Card
+                className="group relative overflow-hidden border-border/50 bg-card/50 backdrop-blur p-6 animate-slide-up"
+                style={{ animationDelay: "300ms" }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative">
+                  <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                    <Target className="w-5 h-5 text-primary" />
+                    Place a Bid
+                  </h3>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-xs text-muted-foreground block mb-2">Bid Amount</label>
+                      <input
+                        type="number"
+                        placeholder="Enter amount"
+                        value={bidAmount}
+                        onChange={(e:any) => setBidAmount(e.target.value)}
+                        className="w-full px-3 py-2 bg-muted/50 border border-border/50 rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+                      />
+                    </div>
+                    <Button className="w-full gap-2 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground border-0">
+                      <Send className="w-4 h-4" />
+                      Submit Bid
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Submit Contribution */}
+              <Card
+                className="group relative overflow-hidden border-border/50 bg-card/50 backdrop-blur p-6 animate-slide-up"
+                style={{ animationDelay: "350ms" }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative">
+                  <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-accent" />
+                    Add Contribution
+                  </h3>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-xs text-muted-foreground block mb-2">Amount</label>
+                      <input
+                        type="number"
+                        placeholder="Enter amount"
+                        value={submitAmount}
+                        onChange={(e:any) => setSubmitAmount(e.target.value)}
+                        className="w-full px-3 py-2 bg-muted/50 border border-border/50 rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+                      />
+                    </div>
+                    <Button className="w-full gap-2 bg-gradient-to-r from-accent to-primary hover:from-accent/90 hover:to-primary/90 text-primary-foreground border-0">
+                      <ArrowRight className="w-4 h-4" />
+                      Submit Contribution
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Pool Info */}
+              <Card
+                className="group relative overflow-hidden border-border/50 bg-card/50 backdrop-blur p-6 animate-slide-up"
+                style={{ animationDelay: "400ms" }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative space-y-4">
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-1">Start Date</p>
+                    <p className="text-sm font-medium text-foreground">{pool.startDate}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-1">End Date</p>
+                    <p className="text-sm font-medium text-foreground">{pool.endDate}</p>
+                  </div>
+                  <div className="pt-4 border-t border-border/30">
+                    <Button
+                      variant="outline"
+                      className="w-full border-border/50 hover:border-destructive/50 hover:text-destructive bg-transparent"
+                    >
+                      Leave Pool
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  )
+}
